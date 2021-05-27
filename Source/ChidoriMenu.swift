@@ -5,6 +5,7 @@
 //  Created by Christian Selig on 2021-02-15.
 //
 
+import os.log
 import UIKit
 
 class ChidoriMenu: UIViewController {
@@ -268,8 +269,12 @@ extension ChidoriMenu: UIViewControllerTransitioningDelegate {
 // MARK: - Presentation Controller Interactive Delegate
 extension ChidoriMenu: ChidoriPresentationControllerDelegate {
     func didTapOverlayView(_ chidoriPresentationController: ChidoriPresentationController) {
-        transitionController?.cancelTransition()
-        dismiss(animated: true, completion: nil)
+        os_log(.info, "%{public}s[%{public}ld], %{public}s", ((#file as NSString).lastPathComponent), #line, #function)
+        if let animatorForCurrentSession = transitionController?.animatorForCurrentSession {
+            transitionController?.reverseTransition()
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
     }
 }
 

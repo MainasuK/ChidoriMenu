@@ -21,7 +21,7 @@ class ChidoriAnimationController: NSObject, UIViewControllerAnimatedTransitionin
     }
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.4
+        return 10
     }
 
     func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
@@ -29,15 +29,15 @@ class ChidoriAnimationController: NSObject, UIViewControllerAnimatedTransitionin
         animateTransition(using: transitionContext)
     }
 
-     func cancelTransition() {
+     func reverseTransition() {
         guard let context = context,
               let animator = animatorForCurrentSession else { return }
 
-         // Cancel the current transition
-        context.cancelInteractiveTransition()
+        // Cancel the current transition
+        // context.cancelInteractiveTransition()
 
          // Play the animation in reverse
-        animator.isReversed = true
+        animator.isReversed.toggle()
         animator.startAnimation()
 
         if type == .presentation {
@@ -112,7 +112,7 @@ class ChidoriAnimationController: NSObject, UIViewControllerAnimatedTransitionin
         }
         
         propertyAnimator.addCompletion { (position) in
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            transitionContext.completeTransition(position == .end)
             self.animatorForCurrentSession = nil
         }
         
